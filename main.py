@@ -20,6 +20,7 @@ We had {}% story point completion this sprint.
 As a result of scope changes on tickets (pointed tickets increasing or decreasing in value), there were {} points added to the sprint.
 
 If we were to take all scope changes and taking total points completed over it, we get {}% completed.
+If we were to remove all scope changes and simply base completion on points completed / points at beginning: {}% completed
 
 Any difference between actual points completed and beginning points can be attributed to scope changes in the middle of the sprint.
 
@@ -131,6 +132,7 @@ def main():
         pointsRemoved,
         scopeChanges,
         truncate(totalCompleted/totalPoints, 2)*100,
+        truncate(totalCompleted/startingStoryPoints, 2)*100
     ))
 
     heuristicStart, endIdx = getSprintStartWithHeuristic(allTr)
@@ -144,6 +146,7 @@ def main():
         pointsRemoved,
         scopeChanges,
         truncate(totalCompleted/totalPoints, 2)*100,
+        truncate(totalCompleted/heuristicStart, 2)*100,
     ))
 
 if __name__ == '__main__':
