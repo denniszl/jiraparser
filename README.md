@@ -7,6 +7,11 @@ Require python3 and BeautifulSoup which can be installed using `pip install beau
 # How to use
 Inspect the page and take the body of the HTML using the inspector. Save it to burndown.html.
 
-(I wasn't able to anything useful via the network tab). Perhaps the JIRA api has something better, but I don't have access to that at work.
+(I wasn't able to find anything useful via the network tab). Perhaps the JIRA api has something better, but I don't have access to that at work.
 
 Run `python main.py` or `python3 main.py` depending on your alias for python3.
+
+# Stuff I'll do one day
+- CSV output? Would anyone even find that useful?
+- Generate reports based on date?
+- Individual reports. Is this even possible?
