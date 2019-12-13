@@ -55,10 +55,17 @@ def getSprintStartWithHeuristic(allTrs):
     return [startValue, currIdx]
 
 def getSprintEnd(allTrs):
-    # iterate from the last tr and try and find the "final" burndown value.
+    # maybe there's a "Sprint ended" column.
     for i in range(len(allTrs) -1, -1, -1):
         tr = allTrs[i]
-        if tr.find(headers=StoryPoints):
+        if tr.find(headers="series-event-type") and 'Sprint ended by' in tr.find(headers="series-event-type").get_text():
+            allSps = tr.find(headers=StoryPoints)
+            return int(allSps.find_all('div')[-1].get_text())
+
+    # iterate from the last tr and try and find the "final" burndown value if sprint wasn't ended
+    for i in range(len(allTrs) -1, -1, -1):
+        tr = allTrs[i]
+        if tr.find(headers=StoryPoints) and tr.find(headers=StoryPoints).get_text().isdigit():
             return int(tr.find(headers=StoryPoints).get_text())
     print("missing a sprint end value")
     return 0

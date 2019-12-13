@@ -15,3 +15,4 @@ Run `python main.py` or `python3 main.py` depending on your alias for python3.
 - CSV output? Would anyone even find that useful?
 - Generate reports based on date?
 - Individual reports. Is this even possible?
+- Better exception handling
