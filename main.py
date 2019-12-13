@@ -38,6 +38,22 @@ def getSprintStart(allTrs):
     print("missing a sprint start value")
     return 0
 
+# make a guess since points rolling over apparently counts as "being added to the sprint".
+def getSprintStartWithHeuristic(allTrs):
+    startValue = 0
+    for i, tr in enumerate(allTrs):
+        if tr.find(headers="series-event-type") and tr.find(headers="series-event-type").get_text() == "Sprint start":
+            startIdx = i
+            startValue = int(tr.find(headers=StoryPoints).get_text())
+    currIdx = startIdx + 1
+    tr = allTrs[currIdx]
+    while tr.find(headers="series-event-detail") and tr.find(headers="series-event-detail").get_text() == "Issue added to sprint":
+        if tr.find(headers=StoryPoints) and tr.find(headers=StoryPoints).get_text().isdigit():
+            startValue = int(tr.find(headers=StoryPoints).get_text())
+        currIdx += 1
+        tr = allTrs[currIdx]
+    return startValue
+
 def getSprintEnd(allTrs):
     # iterate from the last tr and try and find the "final" burndown value.
     for i in range(len(allTrs) -1, -1, -1):
@@ -99,7 +115,7 @@ def main():
     totalPoints = startingStoryPoints - pointsRemoved + pointsAdded + scopeChanges
 
 
-    print(ReportTemplate.format(
+    print('Without applying heuristic:', ReportTemplate.format(
         startingStoryPoints,
         endingStoryPoints,
         truncate((startingStoryPoints - endingStoryPoints)/startingStoryPoints, 2) * 100,
@@ -109,5 +125,18 @@ def main():
         scopeChanges,
         truncate(totalCompleted/totalPoints, 2)*100,
     ))
+
+    heuristicStart = getSprintStartWithHeuristic(allTr)
+    print('If applying heuristic:', ReportTemplate.format(
+        heuristicStart,
+        endingStoryPoints,
+        truncate((heuristicStart - endingStoryPoints)/heuristicStart, 2) * 100,
+        totalCompleted,
+        pointsAdded,
+        pointsRemoved,
+        scopeChanges,
+        truncate(totalCompleted/totalPoints, 2)*100,
+    ))
+
 if __name__ == '__main__':
     main()
