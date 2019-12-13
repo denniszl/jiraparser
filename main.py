@@ -52,7 +52,7 @@ def getSprintStartWithHeuristic(allTrs):
             startValue = int(tr.find(headers=StoryPoints).get_text())
         currIdx += 1
         tr = allTrs[currIdx]
-    return startValue
+    return [startValue, currIdx]
 
 def getSprintEnd(allTrs):
     # iterate from the last tr and try and find the "final" burndown value.
@@ -72,9 +72,9 @@ def getPointsCompleted(allTrs):
                 
     return totalCompleted
 
-def getPointsAdded(allTrs):
+def getPointsAdded(allTrs, idx = 0):
     totalAdded = 0
-    for tr in allTrs:
+    for tr in allTrs[idx:]:
         if tr.find(headers="series-event-detail") and tr.find(headers="series-event-detail").get_text() == "Issue added to sprint":
             if tr.find(headers=StoryPointsIncrease) and tr.find(headers=StoryPointsIncrease).get_text().isdigit():
                 totalAdded += int(tr.find(headers=StoryPointsIncrease).get_text())
@@ -126,7 +126,8 @@ def main():
         truncate(totalCompleted/totalPoints, 2)*100,
     ))
 
-    heuristicStart = getSprintStartWithHeuristic(allTr)
+    heuristicStart, endIdx = getSprintStartWithHeuristic(allTr)
+    pointsAdded = getPointsAdded(allTr, endIdx)
     print('If applying heuristic:', ReportTemplate.format(
         heuristicStart,
         endingStoryPoints,
