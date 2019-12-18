@@ -2,10 +2,13 @@
 
 This is something I'm writing for work to parse the jira burndown html.
 
-Require python3 and BeautifulSoup which can be installed using `pip install beautifulsoup4`.
+Requires python3 and BeautifulSoup which can be installed using `pip install beautifulsoup4`.
 
 # How to use
-Inspect the page and take the body of the HTML using the inspector. Save it to burndown.html.
+Inspect the page and take the body of the HTML using the inspector. Save it to `burndown.html`.
+
+## Example of what to copy:
+![Alt text](example.png "Example body to copy from HTML")
 
 (I wasn't able to find anything useful via the network tab). Perhaps the JIRA api has something better, but I don't have access to that at work.
 
